@@ -1,27 +1,30 @@
+package com.example.holamundo1
+
+import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
-// ==========================================
-// Parte 1: Modelado del Sistema (POO)
-// ==========================================
 
-// Clase Base
+
 open class Entrada(
     val id: Int,
     val precio: Double
 ) {
-    open fun mostrarDetalle() {
-        println("Entrada ID: $id | Precio: $$precio")
+    open fun mostrarDetalle(): String {
+        return "Entrada ID: $id | Precio: $$precio"
     }
 }
 
-// Clases Derivadas e Implementación de Polimorfismo
+
 class EntradaGeneral(
     id: Int,
     precio: Double
 ) : Entrada(id, precio) {
-    override fun mostrarDetalle() {
-        println("[GENERAL] ID: $id | Precio: $$precio")
+    override fun mostrarDetalle(): String {
+        return "[GENERAL] ID: $id | Precio: $$precio"
     }
 }
 
@@ -30,12 +33,12 @@ class EntradaVIP(
     precio: Double,
     val beneficiosExtra: String
 ) : Entrada(id, precio) {
-    override fun mostrarDetalle() {
-        println("[VIP] ID: $id | Precio: $$precio | Beneficios: $beneficiosExtra")
+    override fun mostrarDetalle(): String {
+        return "[VIP] ID: $id | Precio: $$precio | Beneficios: $beneficiosExtra"
     }
 }
 
-//parte2
+
 
 sealed class EstadoValidacion {
     object Validando : EstadoValidacion()
@@ -44,71 +47,93 @@ sealed class EstadoValidacion {
 }
 
 
-suspend fun validarEntrada(id: Int, listaEntradas: List<Entrada>): EstadoValidacion {
-    println("Iniciando proceso de validación...")
-    delay(2000)
+class MainActivity : AppCompatActivity() {
 
-    val entradaEncontrada = listaEntradas.find { it.id == id }
+    private lateinit var tvConsola: TextView
 
-    return if (entradaEncontrada != null) {
-        EstadoValidacion.Valida(entradaEncontrada)
-    } else {
-        EstadoValidacion.NoValida("Error: La entrada con ID $id no fue encontrada en el sistema.")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        tvConsola = findViewById(R.id.tvConsola)
+
+
+        ejecutarEvaluacion()
     }
-}
 
-//main
+    private fun ejecutarEvaluacion() {
+        val salida = StringBuilder()
 
-fun main() {
-    // --- Parte 2: Gestión y Análisis de Datos (Colecciones) ---
-    val listaEntradas: List<Entrada> = listOf(
-        EntradaGeneral(id = 101, precio = 15000.0),
-        EntradaVIP(id = 102, precio = 45000.0, beneficiosExtra = "Acceso a Lounge + Bebida Gratis"),
-        EntradaGeneral(id = 103, precio = 15000.0),
-        EntradaVIP(id = 104, precio = 50000.0, beneficiosExtra = "Meet & Greet + Estacionamiento Preferente"),
-        EntradaGeneral(id = 105, precio = 15000.0)
-    )
 
-    println("=== DETALLE DE ENTRADAS VENDIDAS ===")
-    listaEntradas.forEach { it.mostrarDetalle() }
-    println()
+        val listaEntradas: List<Entrada> = listOf(
+            EntradaGeneral(id = 101, precio = 15000.0),
+            EntradaVIP(id = 102, precio = 45000.0, beneficiosExtra = "Acceso Lounge + Bebida"),
+            EntradaGeneral(id = 103, precio = 15000.0),
+            EntradaVIP(id = 104, precio = 50000.0, beneficiosExtra = "Meet & Greet + Estacionamiento"),
+            EntradaGeneral(id = 105, precio = 15000.0)
+        )
 
-    // Cálculo del ingreso total
-    val ingresoTotal = listaEntradas.sumOf { it.precio }
-    println("Ingreso Total Generado: $$ingresoTotal")
-
-    // Filtrar y contar entradas VIP
-    val cantidadVIP = listaEntradas.count { it is EntradaVIP }
-    println("Cantidad de Entradas VIP vendidas: $cantidadVIP")
-    println("\n-----------------------------------\n")
-
-    // --- Parte 3: Ejecución Asíncrona mediante Corrutinas ---
-    runBlocking {
-        val idABuscar = 102 // Cambia este ID para probar un caso de éxito o fallo (ej. 999)
-
-        // Simulación de respuesta inicial de interfaz
-        val estadoInicial: EstadoValidacion = EstadoValidacion.Validando
-        if (estadoInicial is EstadoValidacion.Validando) {
-            println("Estado actual: Validando entrada en el servidor...")
+        salida.append("=== DETALLE DE ENTRADAS VENDIDAS ===\n")
+        listaEntradas.forEach { entrada ->
+            salida.append("${entrada.mostrarDetalle()}\n")
         }
+        salida.append("\n")
 
-        // Llamada a la función asíncrona
-        val resultado = validarEntrada(idABuscar, listaEntradas)
 
-        // Manejo del resultado con expresión 'when'
-        when (resultado) {
-            is EstadoValidacion.Validando -> {
-                println("El sistema aún está procesando la validación.")
+        val ingresoTotal = listaEntradas.sumOf { it.precio }
+        salida.append("Ingreso Total Generado: $$ingresoTotal\n")
+
+
+        val cantidadVIP = listaEntradas.count { it is EntradaVIP }
+        salida.append("Cantidad de Entradas VIP vendidas: $cantidadVIP\n")
+        salida.append("\n-----------------------------------\n\n")
+
+
+        tvConsola.text = salida.toString()
+
+
+        lifecycleScope.launch {
+            val idABuscar = 102
+
+
+            val estadoInicial: EstadoValidacion = EstadoValidacion.Validando
+            if (estadoInicial is EstadoValidacion.Validando) {
+                salida.append("Estado actual: Validando entrada $idABuscar en el servidor...\n")
+                tvConsola.text = salida.toString()
             }
-            is EstadoValidacion.Valida -> {
-                println("✔ RESULTADO: Entrada Válida.")
-                println("Detalles de la entrada confirmada:")
-                resultado.entrada.mostrarDetalle()
+
+
+            val resultado = validarEntrada(idABuscar, listaEntradas)
+
+
+            when (resultado) {
+                is EstadoValidacion.Validando -> {
+                    salida.append("El sistema aún está procesando.\n")
+                }
+                is EstadoValidacion.Valida -> {
+                    salida.append("\n✔ RESULTADO: Entrada Válida.\n")
+                    salida.append("Detalle: ${resultado.entrada.mostrarDetalle()}\n")
+                }
+                is EstadoValidacion.NoValida -> {
+                    salida.append("\n✖ RESULTADO: Validación Fallida.\n")
+                    salida.append("${resultado.mensajeError}\n")
+                }
             }
-            is EstadoValidacion.NoValida -> {
-                println("✖ RESULTADO: Validación Fallida.")
-                println(resultado.mensajeError)
-            }
+
+
+            tvConsola.text = salida.toString()
+        }
+    }
+
+
+    private suspend fun validarEntrada(id: Int, listaEntradas: List<Entrada>): EstadoValidacion {
+        delay(2000)
+        val entradaEncontrada = listaEntradas.find { it.id == id }
+
+        return if (entradaEncontrada != null) {
+            EstadoValidacion.Valida(entradaEncontrada)
+        } else {
+            EstadoValidacion.NoValida("Error: La entrada con ID $id no fue encontrada.")
         }
     }
 }
