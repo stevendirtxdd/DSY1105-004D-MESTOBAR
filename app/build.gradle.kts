@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation("androidx.compose.material3:material3-window-size-class")
 
     // --- LIBRERÍAS DE JETPACK COMPOSE ---
     implementation(platform("androidx.compose:compose-bom:2024.02.01"))
