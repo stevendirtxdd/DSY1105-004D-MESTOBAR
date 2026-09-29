@@ -1,102 +1,100 @@
-package com.example.holamundo1.ui
+package com.example.holamundo1.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.holamundo1.R
-
+import com.example.holamundo1.navigation.Screen
+import com.example.holamundo1.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
-    // Scaffold proporciona la estructura base con barra superior
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("M1 App Kotlin") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
-        }
-    ) { innerPadding ->
-        // Column organiza sus elementos verticalmente
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding) // Aplica el padding de Scaffold
-                .padding(16.dp), // Margen interno
-            verticalArrangement = Arrangement.spacedBy(20.dp), // Espaciado uniforme de 20dp
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Título principal
-            Text(
-                text = "¡Bienvenido!",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+fun HomeScreen(
+    navController: NavController,
+    viewModel: MainViewModel
+) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-            // Botón principal
-            Button(
-                onClick = { /* Acción futura */ },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Presióname")
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text(
+                    text = "Menú Principal",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                NavigationDrawerItem(
+                    label = { Text("Ir a Perfil") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        viewModel.navigateTo(Screen.Profile)
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Ir a Configuración") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        viewModel.navigateTo(Screen.Settings)
+                    }
+                )
             }
-
-            // Imagen del logo desde drawable
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo App",
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Pantalla Home") },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            scope.launch { drawerState.open() }
+                        }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menú")
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Fit
-            )
-
-            // Componente visual extra (Row) según la guía
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Estado del usuario:",
-                    style = MaterialTheme.typography.bodyLarge
+                Text("¡Bienvenido a la Página de Inicio (MVVM)!")
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Componente del logo
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo de la app",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Fit
                 )
-                Text(
-                    text = "Activo",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(onClick = { viewModel.navigateTo(Screen.Settings) }) {
+                    Text("Ir a Configuración")
+                }
             }
         }
     }
-}
-
-// Vista previa en Android Studio
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }
