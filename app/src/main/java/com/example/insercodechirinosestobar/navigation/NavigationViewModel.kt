@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-// Emite eventos de navegación; MainActivity los colecta en un LaunchedEffect
+
 class NavigationViewModel : ViewModel() {
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>(extraBufferCapacity = 1)

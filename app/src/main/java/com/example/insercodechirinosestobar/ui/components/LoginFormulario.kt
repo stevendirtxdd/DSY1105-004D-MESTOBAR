@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.insercodechirinosestobar.model.LoginErrores
 import com.example.insercodechirinosestobar.model.LoginUiState
 
-// Agrupa las acciones del formulario (con valores por defecto para los previews)
+
 data class LoginAcciones(
     val onEmailChange: (String) -> Unit = {},
     val onPasswordChange: (String) -> Unit = {},
@@ -33,7 +33,7 @@ data class LoginAcciones(
     val onIngresar: () -> Unit = {}
 )
 
-// Formulario reutilizado por los dos layouts (Compact y Medium/Expanded)
+
 @Composable
 fun LoginFormulario(
     estado: LoginUiState,
@@ -58,7 +58,7 @@ fun LoginFormulario(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Campo de clave oculta con PasswordVisualTransformation
+
         OutlinedTextField(
             value = estado.password,
             onValueChange = acciones.onPasswordChange,
@@ -72,7 +72,7 @@ fun LoginFormulario(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Persistencia local limitada: solo se recuerda el correo
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = estado.recordarEmail,
@@ -82,7 +82,7 @@ fun LoginFormulario(
             Text("Recordar mi correo")
         }
 
-        // Interruptor para probar el error de conectividad
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Switch(
                 checked = estado.simularSinConexion,
@@ -93,7 +93,7 @@ fun LoginFormulario(
             Text("Simular sin conexión (prueba)", style = MaterialTheme.typography.bodyMedium)
         }
 
-        // Mensaje de error general (credenciales, conexión, error inesperado)
+
         estado.mensajeError?.let {
             Text(
                 text = it,
@@ -102,7 +102,7 @@ fun LoginFormulario(
             )
         }
 
-        // Botón habilitado solo si isLoginEnabled; muestra carga mientras autentica
+
         Button(
             onClick = acciones.onIngresar,
             enabled = estado.isLoginEnabled,

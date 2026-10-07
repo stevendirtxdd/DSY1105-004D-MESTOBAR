@@ -4,11 +4,11 @@ import com.example.insercodechirinosestobar.model.Rol
 import com.example.insercodechirinosestobar.model.Usuario
 import kotlinx.coroutines.delay
 
-// Errores propios del login para poder mostrar mensajes distintos
+
 class CredencialesException : Exception("Credenciales inválidas")
 class ConexionException : Exception("Sin conexión")
 
-// Simula el servidor con los 3 usuarios ficticios obligatorios
+
 class UsuarioRepository {
 
     private val usuarios = listOf(

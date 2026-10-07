@@ -37,7 +37,7 @@ import com.example.insercodechirinosestobar.ui.theme.InserCodeTheme
 import com.example.insercodechirinosestobar.ui.utils.obtenerWindowSizeClass
 import com.example.insercodechirinosestobar.viewmodel.LoginViewModel
 
-// Pantalla con estado: observa el ViewModel y calcula el tamaño de pantalla
+
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
@@ -47,7 +47,7 @@ fun LoginScreen(
     val errores by viewModel.errores.collectAsState()
     val windowSizeClass = obtenerWindowSizeClass()
 
-    // Cuando el ViewModel publica un rol, el login fue exitoso
+
     LaunchedEffect(estado.rol) {
         if (estado.rol != null) onLoginExitoso()
     }
@@ -66,7 +66,7 @@ fun LoginScreen(
     )
 }
 
-// Pantalla sin estado (se puede previsualizar): elige el layout según el ancho
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContenido(
@@ -124,7 +124,7 @@ private fun LoginCompacta(
     }
 }
 
-// Layout Medium/Expanded (tablet): Row con el logo a la izquierda y el formulario en una Card
+
 @Composable
 private fun LoginAmplia(
     estado: LoginUiState,
@@ -139,7 +139,7 @@ private fun LoginAmplia(
         horizontalArrangement = Arrangement.spacedBy(48.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Columna izquierda: marca
+
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -161,7 +161,7 @@ private fun LoginAmplia(
                 style = MaterialTheme.typography.bodyLarge
             )
         }
-        // Columna derecha: formulario dentro de una Card
+
         Card(modifier = Modifier.weight(1f).widthIn(max = 480.dp)) {
             LoginFormulario(
                 estado = estado,
@@ -175,7 +175,7 @@ private fun LoginAmplia(
     }
 }
 
-// Previews de cada tamaño de pantalla
+
 @Preview(name = "Compact", widthDp = 360, heightDp = 800, showBackground = true)
 @Composable
 fun PreviewLoginCompact() {

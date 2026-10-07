@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// ViewModel compartido: lo usan LoginScreen y HomeScreen (el Home lee el rol desde aquí)
+
 class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     private val usuarioRepository = UsuarioRepository()
@@ -31,7 +31,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val errores: StateFlow<LoginErrores> = _errores.asStateFlow()
 
     init {
-        // Si el usuario pidió recordar su email, se carga al abrir la app
+
         viewModelScope.launch {
             try {
                 val email = sesionRepository.emailGuardado.first()
@@ -43,7 +43,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                // La persistencia es opcional: si falla, la app sigue funcionando
+
             }
         }
     }
@@ -90,12 +90,12 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 val usuario = usuarioRepository.autenticar(
                     estado.email, estado.password, estado.simularSinConexion
                 )
-                // Persistencia limitada: solo email; un fallo aquí no debe romper el login
+
                 runCatching {
                     if (estado.recordarEmail) sesionRepository.guardarEmail(estado.email.trim())
                     else sesionRepository.borrarEmail()
                 }
-                // Se limpia la clave y se publica el rol; el Home lo observa
+
                 _uiState.update { it.copy(isLoading = false, password = "", rol = usuario.rol) }
             } catch (e: CancellationException) {
                 throw e
@@ -114,7 +114,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         _uiState.update { it.copy(isLoading = false, mensajeError = mensaje) }
     }
 
-    // Cierra la sesión: el Home detecta rol = null y vuelve al login
+
     fun cerrarSesion() {
         _uiState.update { it.copy(rol = null, password = "", mensajeError = null) }
         _errores.value = LoginErrores()

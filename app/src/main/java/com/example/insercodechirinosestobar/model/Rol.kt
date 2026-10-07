@@ -1,6 +1,6 @@
 package com.example.insercodechirinosestobar.model
 
-// Roles del sistema Modo Guardián; cada rol ve un Home distinto
+
 enum class Rol(val titulo: String, val funciones: List<String>) {
     ADMIN(
         "Administrador",

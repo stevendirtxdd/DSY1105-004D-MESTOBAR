@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "sesion")
 
-// Persistencia local LIMITADA: solo se guarda el email (nunca la clave)
+
 class SesionRepository(private val context: Context) {
 
     private val claveEmail = stringPreferencesKey("email_recordado")

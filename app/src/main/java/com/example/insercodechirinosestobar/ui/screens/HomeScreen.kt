@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.insercodechirinosestobar.model.Rol
 import com.example.insercodechirinosestobar.viewmodel.LoginViewModel
 
-// Home: observa el MISMO LoginViewModel para conocer el rol (sin pasar argumentos por la ruta)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -34,13 +34,13 @@ fun HomeScreen(
     val estado by viewModel.uiState.collectAsState()
     val rol = estado.rol
 
-    // Si no hay rol (se cerró la sesión) se vuelve al Login
+
     LaunchedEffect(rol) {
         if (rol == null) onSinSesion()
     }
     if (rol == null) return
 
-    // Cada rol tiene un color distinto tomado del MaterialTheme
+
     val colorRol = when (rol) {
         Rol.ADMIN -> MaterialTheme.colorScheme.primary
         Rol.SUPERVISOR -> MaterialTheme.colorScheme.secondary
@@ -73,7 +73,7 @@ fun HomeScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                // Opciones disponibles según el rol
+
                 Card(
                     colors = CardDefaults.cardColors(containerColor = colorRol),
                     modifier = Modifier.fillMaxWidth()
@@ -96,7 +96,7 @@ fun HomeScreen(
                     }
                 }
 
-                // Al cerrar sesión el rol pasa a null y el efecto de arriba navega al Login
+
                 Button(
                     onClick = viewModel::cerrarSesion,
                     modifier = Modifier.fillMaxWidth()

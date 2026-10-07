@@ -23,10 +23,10 @@ class MainActivity : ComponentActivity() {
             InserCodeTheme {
                 val navController = rememberNavController()
                 val navigationViewModel: NavigationViewModel = viewModel()
-                // Mismo LoginViewModel para Login y Home (así el Home conoce el rol)
+
                 val loginViewModel: LoginViewModel = viewModel()
 
-                // Colecta los eventos de navegación y los ejecuta en el NavController
+
                 LaunchedEffect(Unit) {
                     navigationViewModel.navigationEvents.collect { evento ->
                         when (evento) {
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             viewModel = loginViewModel,
                             onLoginExitoso = {
-                                // Login correcto: se va al Home y se quita el Login de la pila
+
                                 navigationViewModel.navigateTo(
                                     AppRoutes.Home.route,
                                     popUpTo = AppRoutes.Login.route,
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(
                             viewModel = loginViewModel,
                             onSinSesion = {
-                                // Sesión cerrada: se vuelve al Login y se quita el Home de la pila
+
                                 navigationViewModel.navigateTo(
                                     AppRoutes.Login.route,
                                     popUpTo = AppRoutes.Home.route,
