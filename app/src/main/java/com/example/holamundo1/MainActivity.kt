@@ -5,28 +5,33 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import com.example.holamundo1.ui.screens.EstadoAnimadoScreen
-import com.example.holamundo1.viewmodel.EstadoViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.holamundo1.navigation.Screen
+import com.example.holamundo1.ui.screens.PerfilScreen
+import com.example.holamundo1.ui.theme.Holamundo1Theme
+import com.example.holamundo1.viewmodel.PerfilViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: EstadoViewModel by viewModels()
+    private val perfilViewModel: PerfilViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        EstadoAnimadoScreen(viewModel = viewModel)
+            Holamundo1Theme {
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Profile.route // 👈 Usa la ruta "profile_page" de tu Screen.kt
+                ) {
+                    composable(Screen.Profile.route) {
+                        PerfilScreen(viewModel = perfilViewModel)
                     }
+                    // Aquí puedes mantener tus otras rutas (Home, Settings, etc.)
                 }
             }
         }
