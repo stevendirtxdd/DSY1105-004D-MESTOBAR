@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import com.example.holamundo1.ui.components.ImagenInteligente
 import com.example.holamundo1.viewmodel.PerfilViewModel
-import com.example.insercodechirinosestobar.ui.components.ImagenInteligente
 import java.io.File
 
 @Composable

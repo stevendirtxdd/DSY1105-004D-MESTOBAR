@@ -1,6 +1,8 @@
 package com.example.holamundo1.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,93 +19,72 @@ fun RegistroScreen(
     navController: NavController,
     viewModel: UsuarioViewModel
 ) {
-    val estado by viewModel.estado.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val errores by viewModel.errores.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(space = 12.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Registro de Usuario", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Registro de Usuario",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        // Campo nombre
+        // Campo Nombre
         OutlinedTextField(
-            value = estado.nombre,
+            value = uiState.nombre,
             onValueChange = viewModel::onNombreChange,
             label = { Text("Nombre") },
-            isError = estado.errores.nombre != null,
-            supportingText = {
-                estado.errores.nombre?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
-                }
-            },
+            isError = errores.nombre != null,
+            supportingText = { errores.nombre?.let { Text(it) } },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Campo correo
+        // Campo Correo
         OutlinedTextField(
-            value = estado.correo,
+            value = uiState.correo,
             onValueChange = viewModel::onCorreoChange,
-            label = { Text("Correo electrónico") },
-            isError = estado.errores.correo != null,
-            supportingText = {
-                estado.errores.correo?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
-                }
-            },
+            label = { Text("Correo Electrónico") },
+            isError = errores.correo != null,
+            supportingText = { errores.correo?.let { Text(it) } },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Campo contraseña
+        // Campo Clave
         OutlinedTextField(
-            value = estado.clave,
+            value = uiState.clave,
             onValueChange = viewModel::onClaveChange,
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
-            isError = estado.errores.clave != null,
-            supportingText = {
-                estado.errores.clave?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
-                }
-            },
+            isError = errores.clave != null,
+            supportingText = { errores.clave?.let { Text(it) } },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Campo dirección
+        // Campo Dirección
         OutlinedTextField(
-            value = estado.direccion,
+            value = uiState.direccion,
             onValueChange = viewModel::onDireccionChange,
             label = { Text("Dirección") },
-            isError = estado.errores.direccion != null,
-            supportingText = {
-                estado.errores.direccion?.let {
-                    Text(text = it, color = MaterialTheme.colorScheme.error)
-                }
-            },
+            isError = errores.direccion != null,
+            supportingText = { errores.direccion?.let { Text(it) } },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Checkbox: aceptar términos
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = estado.aceptaTerminos,
-                onCheckedChange = viewModel::onAceptaTerminosChange
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Acepto los términos y condiciones")
-        }
-
-        // Botón enviar
         Button(
             onClick = {
-                if (viewModel.validarFormulario()) {
+                viewModel.guardarEnRoom {
                     navController.navigate("resumen")
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Registrar")
+            Text("Registrar")
         }
     }
 }

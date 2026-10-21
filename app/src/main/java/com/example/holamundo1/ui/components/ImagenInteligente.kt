@@ -1,6 +1,7 @@
-package com.example.insercodechirinosestobar.ui.components
+package com.example.holamundo1.ui.components
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,29 +26,26 @@ fun ImagenInteligente(
 ) {
     Box(
         modifier = modifier
-            .size(160.dp)
+            .size(120.dp)
             .clip(CircleShape)
-            .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape),
+            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center
     ) {
         if (imagenUri != null) {
-            // Renderiza la imagen desde el Uri usando Coil
             AsyncImage(
                 model = imagenUri,
-                contentDescription = "Foto de perfil",
+                contentDescription = "Foto de usuario",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            // Icono por defecto si no hay imagen
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "Perfil por defecto",
-                modifier = Modifier.size(100.dp),
+                contentDescription = "Sin Foto",
+                modifier = Modifier.size(70.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
 }
-
-annotation class ImagenInteligente

@@ -1,4 +1,4 @@
-package com.example.insercodechirinosestobar.ui.screens
+package com.example.holamundo1.ui.screens
 
 import android.content.Context
 import android.net.Uri
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import com.example.insercodechirinosestobar.ui.components.ImagenInteligente
-import com.example.insercodechirinosestobar.viewmodel.PerfilViewModel
+import com.example.holamundo1.ui.components.ImagenInteligente
+import com.example.holamundo1.viewmodel.PerfilViewModel
 import java.io.File
 
 @Composable
@@ -56,12 +56,10 @@ fun PerfilScreen(viewModel: PerfilViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Componente circular de imagen
             ImagenInteligente(imagenUri = imagenUri)
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Botón 1: Seleccionar desde Galería
             Button(
                 onClick = { galeriaLauncher.launch("image/*") },
                 modifier = Modifier.fillMaxWidth(0.8f)
@@ -71,7 +69,6 @@ fun PerfilScreen(viewModel: PerfilViewModel) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Botón 2: Capturar foto con la Cámara
             OutlinedButton(
                 onClick = {
                     val uri = crearArchivoImagenTemporal(context)
@@ -86,7 +83,6 @@ fun PerfilScreen(viewModel: PerfilViewModel) {
     }
 }
 
-// Función auxiliar para crear una URI temporal con FileProvider
 private fun crearArchivoImagenTemporal(context: Context): Uri {
     val tempFile = File.createTempFile(
         "JPEG_${System.currentTimeMillis()}_",

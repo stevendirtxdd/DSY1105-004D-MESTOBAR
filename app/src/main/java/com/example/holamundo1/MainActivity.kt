@@ -4,35 +4,35 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.holamundo1.navigation.Screen
-import com.example.holamundo1.ui.screens.PerfilScreen
-import com.example.holamundo1.ui.theme.Holamundo1Theme
-import com.example.holamundo1.viewmodel.PerfilViewModel
+import androidx.compose.material3.MaterialTheme
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.holamundo1.data.AppDatabase
+import com.example.holamundo1.data.PreferencesManager
+import com.example.holamundo1.navigation.AppNavigation
+import com.example.holamundo1.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
-
-    private val perfilViewModel: PerfilViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            Holamundo1Theme {
-                val navController = rememberNavController()
 
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Profile.route // 👈 Usa la ruta "profile_page" de tu Screen.kt
-                ) {
-                    composable(Screen.Profile.route) {
-                        PerfilScreen(viewModel = perfilViewModel)
-                    }
-                    // Aquí puedes mantener tus otras rutas (Home, Settings, etc.)
-                }
+        val db = AppDatabase.getDatabase(context = this)
+        val prefManager = PreferencesManager(context = this)
+
+        val factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return UsuarioViewModel(usuarioDao = db.usuarioDao(), preferencesManager = prefManager) as T
+            }
+        }
+
+        val viewModel = ViewModelProvider(owner = this, factory)[UsuarioViewModel::class.java]
+
+        setContent {
+            MaterialTheme {
+                AppNavigation(viewModel = viewModel)
             }
         }
     }
