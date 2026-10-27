@@ -35,51 +35,58 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    // Habilita Jetpack Compose en el proyecto
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
 dependencies {
+    // --- LIBRERÍAS BASE DE ANDROID Y COMPOSE ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.compose.material3:material3-window-size-class")
 
-    // --- LIBRERÍAS DE JETPACK COMPOSE ---
     implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("io.coil-kt:coil-compose:2.6.0")
 
-    // --- NAVEGACIÓN Y LIFECYCLE ---
+    // --- COIL, NAVEGACIÓN Y LIFECYCLE ---
+    implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
+    implementation("androidx.compose.material3:material3-window-size-class")
 
-    // --- DATASTORE (PREFERENCIAS) ---
-    implementation("androidx.datastore:datastore-preferences:1.1.0")
-
-    // --- ROOM DATABASE ---
+    // --- ROOM DATABASE Y DATASTORE ---
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
 
-    // Herramientas de desarrollo y vista previa
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // Pruebas
+    // --- DEPENDENCIAS GUÍA 15: PRUEBAS UNITARIAS (src/test/java) ---
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.6")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.6")
+    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation(libs.junit)
+
+    // --- DEPENDENCIAS GUÍA 15: PRUEBAS DE UI (src/androidTest/java) ---
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.2")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.2")
+    debugImplementation("androidx.compose.ui:ui-tooling")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.compose.material3:material3-window-size-class")
 }
+
+// Configuración obligatoria para habilitar la plataforma JUnit 5 (Kotest)
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
